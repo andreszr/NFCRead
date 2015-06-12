@@ -49,8 +49,7 @@ public class MainActivity extends Activity {
 				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		// Configura un intent filter para todos los datos MIME
-		IntentFilter ndefIntent = new IntentFilter(
-				NfcAdapter.ACTION_NDEF_DISCOVERED);
+		IntentFilter ndefIntent = new IntentFilter(	NfcAdapter.ACTION_NDEF_DISCOVERED);
 		try {
 			ndefIntent.addDataType("*/*");
 			mIntentFilters = new IntentFilter[] { ndefIntent };
@@ -68,24 +67,17 @@ public class MainActivity extends Activity {
 		String s = "";
 
 		// analiza a traves de todos los mensajes NDEF y sus registros y obtiene solo los tipo texto
-		Parcelable[] data = intent
-				.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		Parcelable[] data = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 		if (data != null) {
 			try {
 				for (int i = 0; i < data.length; i++) {
 					NdefRecord[] recs = ((NdefMessage) data[i]).getRecords();
 					for (int j = 0; j < recs.length; j++) {
-						if (recs[j].getTnf() == NdefRecord.TNF_WELL_KNOWN
-								&& Arrays.equals(recs[j].getType(),
-										NdefRecord.RTD_TEXT)) {
+						if (recs[j].getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(recs[j].getType(), NdefRecord.RTD_TEXT)) {
 							byte[] payload = recs[j].getPayload();
-							String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8"
-									: "UTF-16";
+							String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
 							int langCodeLen = payload[0] & 0077;
-
-							s = (new String(payload, langCodeLen + 1,
-											payload.length - langCodeLen - 1,
-											textEncoding));
+							s = (new String(payload, langCodeLen + 1, payload.length - langCodeLen - 1,	textEncoding));
 						}
 					}
 				}
